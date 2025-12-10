@@ -102,6 +102,8 @@ createApp({
   data() {
     return {
       message: '',
+      realMessage: '',
+      displayMessage: '',
       passkey: '',
       mode: 'encode',
       animationEnabled: true,
@@ -111,6 +113,9 @@ createApp({
       isAnimating: false,
       animationTimer: null,
       showPass: false,
+      maskTimer: null,
+      lastSelectionStart: 0,
+      lastSelectionEnd: 0,
     };
   },
   computed: {
@@ -123,6 +128,15 @@ createApp({
   methods: {
     setMode(next) {
       if (this.mode === next) return;
+      this.clearMaskTimer();
+      if (next === 'decode') {
+        this.message = this.realMessage || this.message;
+        this.displayMessage = this.realMessage;
+      } else {
+        this.realMessage = this.message || this.realMessage;
+        this.updateDisplayMessage(false);
+        this.resetMaskTimer();
+      }
       this.mode = next;
       this.status = {
         message: `${next === 'encode' ? 'Encoding' : 'Decoding'} mode selected.`,
@@ -139,14 +153,15 @@ createApp({
         this.setStatus('Passkey is required before processing.', true);
         return;
       }
-      if (!this.message || this.message.trim() === '') {
+      const inputText = this.mode === 'encode' ? this.realMessage : this.message;
+      if (!inputText || inputText.trim() === '') {
         this.setStatus('Please enter a message to process.', true);
         return;
       }
 
       try {
         if (this.mode === 'encode') {
-          const encoded = await encodeMessage(this.message, this.passkey);
+          const encoded = await encodeMessage(this.realMessage, this.passkey);
           this.result = encoded;
           this.displayedResult = encoded;
           this.setStatus('Message encoded successfully.');
@@ -193,10 +208,98 @@ createApp({
     },
     clearAll() {
       this.stopAnimation();
+      this.clearMaskTimer();
       this.message = '';
+      this.realMessage = '';
+      this.displayMessage = '';
+      this.lastSelectionStart = 0;
+      this.lastSelectionEnd = 0;
       this.result = '';
       this.displayedResult = '';
       this.setStatus('Cleared. Ready for a new message.');
+    },
+    handleMessageInput(event) {
+      const value = event.target.value;
+      if (this.mode === 'encode') {
+        const start = this.lastSelectionStart ?? 0;
+        const end = this.lastSelectionEnd ?? 0;
+        const inputType = event.inputType || '';
+        const data = event.data;
+        let nextReal = this.realMessage;
+
+        if (inputType.startsWith('delete')) {
+          let deleteStart = start;
+          let deleteEnd = end;
+
+          if (start === end) {
+            if (inputType === 'deleteContentBackward' && start > 0) {
+              deleteStart = start - 1;
+            } else if (inputType === 'deleteContentForward' && end < this.realMessage.length) {
+              deleteEnd = end + 1;
+            }
+          }
+
+          nextReal = `${this.realMessage.slice(0, deleteStart)}${this.realMessage.slice(deleteEnd)}`;
+        } else {
+          const baseLength = this.realMessage.length - (end - start);
+          const insertedLength = Math.max(0, value.length - baseLength);
+          const insertedText = data !== null && data !== undefined
+            ? data
+            : value.slice(start, start + insertedLength);
+
+          nextReal = `${this.realMessage.slice(0, start)}${insertedText}${this.realMessage.slice(end)}`;
+        }
+
+        this.realMessage = nextReal;
+        this.updateDisplayMessage(false);
+        this.resetMaskTimer();
+      } else {
+        this.message = value;
+      }
+      this.recordSelection(event);
+    },
+    recordSelection(event) {
+      this.lastSelectionStart = event.target.selectionStart || 0;
+      this.lastSelectionEnd = event.target.selectionEnd || 0;
+    },
+    computeDisplayMessage(text, maskLastWord) {
+      const tokens = text.match(/(\S+|\s+)/g) || [];
+      let lastWordIndex = -1;
+
+      tokens.forEach((token, index) => {
+        if (!/\s/.test(token[0])) {
+          lastWordIndex = index;
+        }
+      });
+
+      if (lastWordIndex === -1) return text;
+
+      return tokens
+        .map((token, index) => {
+          if (/\s/.test(token[0])) return token;
+          if (maskLastWord || index !== lastWordIndex) {
+            return '*'.repeat(token.length);
+          }
+          return token;
+        })
+        .join('');
+    },
+    updateDisplayMessage(maskLastWord) {
+      this.displayMessage = this.computeDisplayMessage(this.realMessage, maskLastWord);
+    },
+    resetMaskTimer() {
+      this.clearMaskTimer();
+      if (!this.realMessage) return;
+      this.maskTimer = setTimeout(() => {
+        this.updateDisplayMessage(true);
+        this.maskTimer = null;
+      }, 5000);
+    },
+    clearMaskTimer() {
+      if (this.maskTimer) {
+        clearTimeout(this.maskTimer);
+        this.maskTimer = null;
+      }
     },
     copyResult() {
       const text = this.result || this.displayedResult;
