@@ -336,9 +336,25 @@ createApp({
           if (index < visibleStart) {
             return segment.replace(/[^\s]/g, '*');
           }
+
+          // When there are only a few sentences, still mask the leading portion
+          // of the visible text so decoded content is never fully exposed.
+          if (sentences.length <= 3 && index === visibleStart) {
+            return this.maskLeadingPortion(segment);
+          }
+
           return segment;
         })
         .join('');
+    },
+    maskLeadingPortion(segment) {
+      if (!segment) return '';
+      const keepCharacters = Math.max(6, Math.floor(segment.length * 0.25));
+      const maskLength = Math.max(0, segment.length - keepCharacters);
+      const masked = segment
+        .slice(0, maskLength)
+        .replace(/[^\s]/g, '*');
+      return `${masked}${segment.slice(maskLength)}`;
     },
     resetMaskTimer() {
       this.clearMaskTimer();
