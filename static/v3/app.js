@@ -104,6 +104,7 @@ createApp({
       message: '',
       realMessage: '',
       displayMessage: '',
+      maskLastWord: false,
       passkey: '',
       mode: 'encode',
       decodeSpeed: 'fast',
@@ -130,12 +131,8 @@ createApp({
     setMode(next) {
       if (this.mode === next) return;
       this.clearMaskTimer();
-      if (next === 'decode') {
-        this.message = this.realMessage || this.message;
-        this.displayMessage = this.realMessage;
-      } else {
-        this.realMessage = this.message || this.realMessage;
-        this.updateDisplayMessage(false);
+      if (next === 'encode') {
+        this.updateDisplayMessage();
         this.resetMaskTimer();
       }
       this.mode = next;
@@ -226,6 +223,7 @@ createApp({
       this.result = '';
       this.displayedResult = '';
       this.fullDecodedText = '';
+      this.maskLastWord = false;
       this.setStatus('Cleared. Ready for a new message.');
     },
     handleMessageInput(event) {
@@ -295,7 +293,9 @@ createApp({
         .join('');
     },
     updateDisplayMessage(maskLastWord) {
-      this.displayMessage = this.computeDisplayMessage(this.realMessage, maskLastWord);
+      const shouldMaskLastWord = typeof maskLastWord === 'boolean' ? maskLastWord : this.maskLastWord;
+      this.maskLastWord = shouldMaskLastWord;
+      this.displayMessage = this.computeDisplayMessage(this.realMessage, shouldMaskLastWord);
     },
     splitIntoSentences(text) {
       const sentences = [];
@@ -327,11 +327,13 @@ createApp({
     },
     computeMaskedDecoded(text) {
       if (!text) return '';
-      const sentences = this.splitIntoSentences(text);
+      const sourceText = this.fullDecodedText || text;
+      if (!sourceText) return '';
+      const sentences = this.splitIntoSentences(sourceText);
       if (!sentences.length) return text;
       const visibleStart = Math.max(0, sentences.length - 3);
 
-      return sentences
+      const masked = sentences
         .map((segment, index) => {
           if (index < visibleStart) {
             return segment.replace(/[^\s]/g, '*');
@@ -346,6 +348,9 @@ createApp({
           return segment;
         })
         .join('');
+
+      const revealLength = text ? text.length : masked.length;
+      return masked.slice(0, revealLength);
     },
     maskLeadingPortion(segment) {
       if (!segment) return '';
