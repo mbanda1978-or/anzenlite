@@ -329,7 +329,7 @@ createApp({
       if (!sentences.length) return text;
       const visibleStart = Math.max(0, sentences.length - 3);
 
-      return sentences
+      const masked = sentences
         .map((segment, index) => {
           if (index < visibleStart) {
             return segment.replace(/[^\s]/g, '*');
@@ -344,6 +344,8 @@ createApp({
           return segment;
         })
         .join('');
+
+      return this.restoreTrailingWords(masked, text, 3);
     },
     maskLeadingPortion(segment) {
       if (!segment) return '';
@@ -353,6 +355,28 @@ createApp({
         .slice(0, maskLength)
         .replace(/[^\s]/g, '*');
       return `${masked}${segment.slice(maskLength)}`;
+    },
+    restoreTrailingWords(masked, original, count) {
+      if (!masked || !original) return masked || original || '';
+      const words = [...original.matchAll(/\S+/g)];
+      if (!words.length) return masked;
+      const start = Math.max(0, words.length - count);
+      const chars = masked.split('');
+
+      for (let i = start; i < words.length; i += 1) {
+        const match = words[i];
+        const word = match[0];
+        const index = match.index || 0;
+
+        for (let j = 0; j < word.length; j += 1) {
+          const pos = index + j;
+          if (pos < chars.length) {
+            chars[pos] = original[pos];
+          }
+        }
+      }
+
+      return chars.join('');
     },
     resetMaskTimer() {
       this.clearMaskTimer();
