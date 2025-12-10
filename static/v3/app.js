@@ -1,11 +1,19 @@
-// Core encryption helpers preserved for compatibility
+// Core encryption helpers preserved from the legacy /static/v3 page
+function requireCrypto() {
+  if (typeof CryptoJS === 'undefined') {
+    throw new Error('CryptoJS library is unavailable.');
+  }
+}
+
 function encodeMessage(plainText, passkey) {
   if (!passkey) throw new Error('Passphrase cannot be empty');
+  requireCrypto();
   return CryptoJS.AES.encrypt(plainText, passkey).toString();
 }
 
 function decodeMessage(cipherText, passkey) {
   if (!passkey) throw new Error('Passphrase cannot be empty');
+  requireCrypto();
   const result = CryptoJS.AES.decrypt(cipherText, passkey).toString(
     CryptoJS.enc.Utf8,
   );
