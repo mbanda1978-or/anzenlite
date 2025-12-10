@@ -106,10 +106,11 @@ createApp({
       displayMessage: '',
       passkey: '',
       mode: 'encode',
-      animationEnabled: true,
+      decodeSpeed: 'fast',
       status: { message: 'Awaiting input. Choose encode or decode to begin.', isError: false },
       result: '',
       displayedResult: '',
+      fullDecodedText: '',
       isAnimating: false,
       animationTimer: null,
       showPass: false,
@@ -145,7 +146,11 @@ createApp({
       this.stopAnimation();
       this.displayedResult = '';
       this.result = '';
+      this.fullDecodedText = '';
       this.persist();
+    },
+    toggleDecodeSpeed() {
+      this.decodeSpeed = this.decodeSpeed === 'fast' ? 'slow' : 'fast';
     },
     async handleAction() {
       this.stopAnimation();
@@ -164,22 +169,20 @@ createApp({
           const encoded = await encodeMessage(this.realMessage, this.passkey);
           this.result = encoded;
           this.displayedResult = encoded;
+          this.fullDecodedText = '';
           this.setStatus('Message encoded successfully.');
         } else {
           const decoded = await decodeMessage(this.message, this.passkey);
           this.result = decoded;
-          if (this.animationEnabled) {
-            this.setStatus('Decoding with animated reveal...');
-            this.animateDecode(decoded);
-          } else {
-            this.displayedResult = decoded;
-            this.setStatus('Message decoded successfully.');
-          }
+          this.fullDecodedText = decoded;
+          this.setStatus('Decoding with animated reveal...');
+          this.animateDecode(decoded);
         }
         this.persist();
       } catch (err) {
         this.result = '';
         this.displayedResult = '';
+        this.fullDecodedText = '';
         this.setStatus(err.message || 'An unexpected error occurred.', true);
       }
     },
@@ -187,15 +190,21 @@ createApp({
       this.isAnimating = true;
       this.displayedResult = '';
       let index = 0;
+      const nextDelay = () => (this.decodeSpeed === 'fast' ? 12 + Math.random() * 18 : 40 + Math.random() * 30);
       const reveal = () => {
-        this.displayedResult = text.slice(0, index);
         index += 1;
-        if (index <= text.length) {
-          this.animationTimer = setTimeout(reveal, 14 + Math.random() * 26);
-        } else {
-          this.isAnimating = false;
-          this.setStatus('Message decoded successfully.');
+        const partial = text.slice(0, index);
+        this.displayedResult = this.computeMaskedDecoded(partial);
+
+        if (index < text.length) {
+          this.animationTimer = setTimeout(reveal, nextDelay());
+          return;
         }
+
+        this.isAnimating = false;
+        this.displayedResult = this.computeMaskedDecoded(text);
+        this.animationTimer = null;
+        this.setStatus('Message decoded successfully.');
       };
       reveal();
     },
@@ -216,6 +225,7 @@ createApp({
       this.lastSelectionEnd = 0;
       this.result = '';
       this.displayedResult = '';
+      this.fullDecodedText = '';
       this.setStatus('Cleared. Ready for a new message.');
     },
     handleMessageInput(event) {
@@ -287,6 +297,49 @@ createApp({
     updateDisplayMessage(maskLastWord) {
       this.displayMessage = this.computeDisplayMessage(this.realMessage, maskLastWord);
     },
+    splitIntoSentences(text) {
+      const sentences = [];
+      let start = 0;
+
+      for (let i = 0; i < text.length; i += 1) {
+        const char = text[i];
+        if (char === '.' || char === '!' || char === '?') {
+          const next = text[i + 1];
+          if (next === undefined || /\s/.test(next)) {
+            let end = i + 1;
+            while (end < text.length && /\s/.test(text[end])) {
+              end += 1;
+            }
+            if (end > start) {
+              sentences.push(text.slice(start, end));
+              start = end;
+              i = end - 1;
+            }
+          }
+        }
+      }
+
+      if (start < text.length) {
+        sentences.push(text.slice(start));
+      }
+
+      return sentences.filter(Boolean);
+    },
+    computeMaskedDecoded(text) {
+      if (!text) return '';
+      const sentences = this.splitIntoSentences(text);
+      if (!sentences.length) return text;
+      const visibleStart = Math.max(0, sentences.length - 3);
+
+      return sentences
+        .map((segment, index) => {
+          if (index < visibleStart) {
+            return segment.replace(/[^\s]/g, '*');
+          }
+          return segment;
+        })
+        .join('');
+    },
     resetMaskTimer() {
       this.clearMaskTimer();
       if (!this.realMessage) return;
@@ -315,7 +368,7 @@ createApp({
     persist() {
       try {
         localStorage.setItem('anzen.mode', this.mode);
-        localStorage.setItem('anzen.animation', JSON.stringify(this.animationEnabled));
+        localStorage.setItem('anzen.decodeSpeed', this.decodeSpeed);
         localStorage.setItem('anzen.passkey', this.passkey);
       } catch (e) {
         console.warn('Persistence unavailable', e);
@@ -325,9 +378,14 @@ createApp({
       try {
         const mode = localStorage.getItem('anzen.mode');
         const anim = localStorage.getItem('anzen.animation');
+        const storedSpeed = localStorage.getItem('anzen.decodeSpeed');
         const key = localStorage.getItem('anzen.passkey');
         if (mode === 'encode' || mode === 'decode') this.mode = mode;
-        if (anim !== null) this.animationEnabled = JSON.parse(anim);
+        if (storedSpeed === 'fast' || storedSpeed === 'slow') {
+          this.decodeSpeed = storedSpeed;
+        } else if (anim !== null) {
+          this.decodeSpeed = JSON.parse(anim) ? 'fast' : 'slow';
+        }
         if (key) this.passkey = key;
       } catch (e) {
         console.warn('Unable to restore preferences', e);
@@ -341,7 +399,7 @@ createApp({
     passkey() {
       this.persist();
     },
-    animationEnabled() {
+    decodeSpeed() {
       this.persist();
     },
   },
