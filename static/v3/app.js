@@ -101,7 +101,7 @@ const { createApp } = Vue;
 createApp({
   data() {
     return {
-      message: '',
+      decodeInput: '',
       realMessage: '',
       displayMessage: '',
       passkey: '',
@@ -131,10 +131,8 @@ createApp({
       if (this.mode === next) return;
       this.clearMaskTimer();
       if (next === 'decode') {
-        this.message = this.realMessage || this.message;
-        this.displayMessage = this.realMessage;
+        this.updateDisplayMessage(true);
       } else {
-        this.realMessage = this.message || this.realMessage;
         this.updateDisplayMessage(false);
         this.resetMaskTimer();
       }
@@ -158,7 +156,7 @@ createApp({
         this.setStatus('Passkey is required before processing.', true);
         return;
       }
-      const inputText = this.mode === 'encode' ? this.realMessage : this.message;
+      const inputText = this.mode === 'encode' ? this.realMessage : this.decodeInput;
       if (!inputText || inputText.trim() === '') {
         this.setStatus('Please enter a message to process.', true);
         return;
@@ -172,7 +170,7 @@ createApp({
           this.fullDecodedText = '';
           this.setStatus('Message encoded successfully.');
         } else {
-          const decoded = await decodeMessage(this.message, this.passkey);
+          const decoded = await decodeMessage(this.decodeInput, this.passkey);
           this.result = decoded;
           this.fullDecodedText = decoded;
           this.setStatus('Decoding with animated reveal...');
@@ -218,7 +216,7 @@ createApp({
     clearAll() {
       this.stopAnimation();
       this.clearMaskTimer();
-      this.message = '';
+      this.decodeInput = '';
       this.realMessage = '';
       this.displayMessage = '';
       this.lastSelectionStart = 0;
@@ -264,7 +262,7 @@ createApp({
         this.updateDisplayMessage(false);
         this.resetMaskTimer();
       } else {
-        this.message = value;
+        this.decodeInput = value;
       }
       this.recordSelection(event);
     },
