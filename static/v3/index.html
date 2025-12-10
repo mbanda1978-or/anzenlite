@@ -40,7 +40,7 @@
           <label class="field-label" for="message">Message</label>
           <textarea
             id="message"
-            :value="mode === 'encode' ? displayMessage : message"
+            :value="mode === 'encode' ? displayMessage : decodeInput"
             @input="handleMessageInput"
             @beforeinput="recordSelection"
             class="terminal-input"

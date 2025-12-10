@@ -101,7 +101,7 @@ const { createApp } = Vue;
 createApp({
   data() {
     return {
-      message: '',
+      decodeInput: '',
       realMessage: '',
       displayMessage: '',
       passkey: '',
@@ -131,10 +131,8 @@ createApp({
       if (this.mode === next) return;
       this.clearMaskTimer();
       if (next === 'decode') {
-        this.message = this.realMessage || this.message;
-        this.displayMessage = this.realMessage;
+        this.updateDisplayMessage(true);
       } else {
-        this.realMessage = this.message || this.realMessage;
         this.updateDisplayMessage(false);
         this.resetMaskTimer();
       }
@@ -158,7 +156,7 @@ createApp({
         this.setStatus('Passkey is required before processing.', true);
         return;
       }
-      const inputText = this.mode === 'encode' ? this.realMessage : this.message;
+      const inputText = this.mode === 'encode' ? this.realMessage : this.decodeInput;
       if (!inputText || inputText.trim() === '') {
         this.setStatus('Please enter a message to process.', true);
         return;
@@ -172,7 +170,7 @@ createApp({
           this.fullDecodedText = '';
           this.setStatus('Message encoded successfully.');
         } else {
-          const decoded = await decodeMessage(this.message, this.passkey);
+          const decoded = await decodeMessage(this.decodeInput, this.passkey);
           this.result = decoded;
           this.fullDecodedText = decoded;
           this.setStatus('Decoding with animated reveal...');
@@ -218,7 +216,7 @@ createApp({
     clearAll() {
       this.stopAnimation();
       this.clearMaskTimer();
-      this.message = '';
+      this.decodeInput = '';
       this.realMessage = '';
       this.displayMessage = '';
       this.lastSelectionStart = 0;
@@ -264,7 +262,7 @@ createApp({
         this.updateDisplayMessage(false);
         this.resetMaskTimer();
       } else {
-        this.message = value;
+        this.decodeInput = value;
       }
       this.recordSelection(event);
     },
@@ -297,64 +295,21 @@ createApp({
     updateDisplayMessage(maskLastWord) {
       this.displayMessage = this.computeDisplayMessage(this.realMessage, maskLastWord);
     },
-    splitIntoSentences(text) {
-      const sentences = [];
-      let start = 0;
-
-      for (let i = 0; i < text.length; i += 1) {
-        const char = text[i];
-        if (char === '.' || char === '!' || char === '?') {
-          const next = text[i + 1];
-          if (next === undefined || /\s/.test(next)) {
-            let end = i + 1;
-            while (end < text.length && /\s/.test(text[end])) {
-              end += 1;
-            }
-            if (end > start) {
-              sentences.push(text.slice(start, end));
-              start = end;
-              i = end - 1;
-            }
-          }
-        }
-      }
-
-      if (start < text.length) {
-        sentences.push(text.slice(start));
-      }
-
-      return sentences.filter(Boolean);
-    },
     computeMaskedDecoded(text) {
       if (!text) return '';
-      const sentences = this.splitIntoSentences(text);
-      if (!sentences.length) return text;
-      const visibleStart = Math.max(0, sentences.length - 3);
-
-      return sentences
-        .map((segment, index) => {
-          if (index < visibleStart) {
-            return segment.replace(/[^\s]/g, '*');
-          }
-
-          // When there are only a few sentences, still mask the leading portion
-          // of the visible text so decoded content is never fully exposed.
-          if (sentences.length <= 3 && index === visibleStart) {
-            return this.maskLeadingPortion(segment);
-          }
-
-          return segment;
-        })
-        .join('');
+      const fullyMasked = text.replace(/[^\s]/g, '*');
+      return this.revealTrailingCharacters(fullyMasked, text, 6);
     },
-    maskLeadingPortion(segment) {
-      if (!segment) return '';
-      const keepCharacters = Math.max(6, Math.floor(segment.length * 0.25));
-      const maskLength = Math.max(0, segment.length - keepCharacters);
-      const masked = segment
-        .slice(0, maskLength)
-        .replace(/[^\s]/g, '*');
-      return `${masked}${segment.slice(maskLength)}`;
+    revealTrailingCharacters(masked, original, count) {
+      if (!masked || !original || count <= 0) return masked || original || '';
+      const chars = masked.split('');
+      const start = Math.max(0, original.length - count);
+
+      for (let i = start; i < original.length; i += 1) {
+        chars[i] = original[i];
+      }
+
+      return chars.join('');
     },
     resetMaskTimer() {
       this.clearMaskTimer();
