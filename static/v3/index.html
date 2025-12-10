@@ -122,15 +122,15 @@
             <div class="icon-circle"><i class="fa-solid fa-wand-sparkles"></i></div>
             <div>
               <p class="eyebrow">Visuals</p>
-              <h3>Decode animation</h3>
+              <h3>Decode animation speed</h3>
             </div>
           </div>
           <label class="switch">
-            <input type="checkbox" v-model="animationEnabled" />
+            <input type="checkbox" :checked="decodeSpeed === 'fast'" @change="toggleDecodeSpeed" />
             <span class="slider"></span>
-            <span class="switch-label">Enable decode animation</span>
+            <span class="switch-label">{{ decodeSpeed === 'fast' ? 'Fast decode animation' : 'Slow decode animation' }}</span>
           </label>
-          <p class="helper">When decoding, reveal text with a typewriter effect.</p>
+          <p class="helper">Switch between fast and slow decoding animations. Animation is always active.</p>
         </div>
 
         <div class="sidebar-card">
@@ -147,8 +147,8 @@
               <strong>{{ mode === 'encode' ? 'Encoding' : 'Decoding' }}</strong>
             </li>
             <li>
-              <span>Animation</span>
-              <strong>{{ animationEnabled ? 'Enabled' : 'Disabled' }}</strong>
+              <span>Animation speed</span>
+              <strong>{{ decodeSpeed === 'fast' ? 'Fast' : 'Slow' }}</strong>
             </li>
             <li>
               <span>Passkey</span>
