@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<!-- saved from url=(0036)https://www.anzenlite.com/static/v3/ -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        
+        <meta name="viewport" content="width=device-width,initial-scale=1.0">
+        <title>AnzenLite Terminal - Secure Encryption Suite</title>
+
+        <script src="./AnzenLite Terminal - Secure Encryption Suite_files/jquery-3.6.0.min.js"></script>
+        <script src="./AnzenLite Terminal - Secure Encryption Suite_files/jquery.terminal.min.js"></script>
+        <script src="./AnzenLite Terminal - Secure Encryption Suite_files/crypto-js.min.js"></script>
+        <link rel="stylesheet" href="./AnzenLite Terminal - Secure Encryption Suite_files/jquery.terminal.min.css">
+        <link rel="stylesheet" href="./AnzenLite Terminal - Secure Encryption Suite_files/styles.css">
+    </head>
+    <body>
+        <div class="power-indicator"></div>
+        <div class="noise-overlay"></div>
+        <div class="scanlines"></div>
+        <div class="terminal-border"></div>
+        <div id="terminal" class="terminal crt-flicker" style="--pixel-density: 1; --char-width: 7.23214; --terminal-height: 783.429; --terminal-x: 10; --terminal-y: 696.0000610351562; --terminal-scroll: 0;"><div class="terminal-scroller"><div class="terminal-wrapper"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 14" style="display: none;"><title id="title2">rounded</title><path id="terminal-broken-image" d="m 14,10 h 2 v 1 a 3,3 0 0 1 -3,3 H 3 A 3,3 0 0 1 0,11 H 4.5 A 1.00012,1.00012 0 0 0 5.207,10.707 L 6.5,9.414 7.793,10.707 a 0.99963,0.99963 0 0 0 1.41406,0 l 2.36719,-2.36719 1.80127,1.44092 A 0.99807,0.99807 0 0 0 14,10 Z M 16,3 V 8 H 14.35059 L 12.12451,6.21924 A 0.99846,0.99846 0 0 0 10.793,6.293 L 8.5,8.586 7.207,7.293 a 0.99962,0.99962 0 0 0 -1.41406,0 L 4.08594,9 H 0 V 3 A 3,3 0 0 1 3,0 h 10 a 3,3 0 0 1 3,3 z M 6,4.5 A 1.5,1.5 0 1 0 4.5,6 1.5,1.5 0 0 0 6,4.5 Z"></path></svg><div class="terminal-output" role="log"><div data-index="0"><div style="width: 100%;"></div><div style="width: 100%;"><span style="color:#00ff66;--color:#00ff66;--original-color:#00ff66" data-text="\n █████╗ ███╗   ██╗███████╗███████╗███╗   ██╗    ██╗     ██╗████████╗███████╗\n██╔══██╗████╗  ██║╚══███╔╝██╔════╝████╗  ██║    ██║     ██║╚══██╔══╝██╔════╝\n███████║██╔██╗ ██║  ███╔╝ █████╗  ██╔██╗ ██║    ██║     ██║   ██║   █████╗\n██╔══██║██║╚██╗██║ ███╔╝  ██╔══╝  ██║╚██╗██║    ██║     ██║   ██║   ██╔══╝\n██║  ██║██║ ╚████║███████╗███████╗██║ ╚████║    ███████╗██║   ██║   ███████╗\n╚═╝  ╚═╝╚═╝  ╚═══╝╚══════╝╚══════╝╚═╝  ╚═══╝    ╚══════╝╚═╝   ╚═╝   ╚══════╝"><span>&nbsp;█████╗&nbsp;███╗&nbsp;&nbsp;&nbsp;██╗███████╗███████╗███╗&nbsp;&nbsp;&nbsp;██╗&nbsp;&nbsp;&nbsp;&nbsp;██╗&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;██╗████████╗███████╗</span></span></div><div style="width: 100%;"><span style="color:#00ff66;--color:#00ff66;--original-color:#00ff66" data-text="\n █████╗ ███╗   ██╗███████╗███████╗███╗   ██╗    ██╗     ██╗████████╗███████╗\n██╔══██╗████╗  ██║╚══███╔╝██╔════╝████╗  ██║    ██║     ██║╚══██╔══╝██╔════╝\n███████║██╔██╗ ██║  ███╔╝ █████╗  ██╔██╗ ██║    ██║     ██║   ██║   █████╗\n██╔══██║██║╚██╗██║ ███╔╝  ██╔══╝  ██║╚██╗██║    ██║     ██║   ██║   ██╔══╝\n██║  ██║██║ ╚████║███████╗███████╗██║ ╚████║    ███████╗██║   ██║   ███████╗\n╚═╝  ╚═╝╚═╝  ╚═══╝╚══════╝╚══════╝╚═╝  ╚═══╝    ╚══════╝╚═╝   ╚═╝   ╚══════╝"><span>██╔══██╗████╗&nbsp;&nbsp;██║╚══███╔╝██╔════╝████╗&nbsp;&nbsp;██║&nbsp;&nbsp;&nbsp;&nbsp;██║&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;██║╚══██╔══╝██╔════╝</span></span></div><div style="width: 100%;"><span style="color:#00ff66;--color:#00ff66;--original-color:#00ff66" data-text="\n █████╗ ███╗   ██╗███████╗███████╗███╗   ██╗    ██╗     ██╗████████╗███████╗\n██╔══██╗████╗  ██║╚══███╔╝██╔════╝████╗  ██║    ██║     ██║╚══██╔══╝██╔════╝\n███████║██╔██╗ ██║  ███╔╝ █████╗  ██╔██╗ ██║    ██║     ██║   ██║   █████╗\n██╔══██║██║╚██╗██║ ███╔╝  ██╔══╝  ██║╚██╗██║    ██║     ██║   ██║   ██╔══╝\n██║  ██║██║ ╚████║███████╗███████╗██║ ╚████║    ███████╗██║   ██║   ███████╗\n╚═╝  ╚═╝╚═╝  ╚═══╝╚══════╝╚══════╝╚═╝  ╚═══╝    ╚══════╝╚═╝   ╚═╝   ╚══════╝"><span>███████║██╔██╗&nbsp;██║&nbsp;&nbsp;███╔╝&nbsp;█████╗&nbsp;&nbsp;██╔██╗&nbsp;██║&nbsp;&nbsp;&nbsp;&nbsp;██║&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;██║&nbsp;&nbsp;&nbsp;██║&nbsp;&nbsp;&nbsp;█████╗</span></span></div><div style="width: 100%;"><span style="color:#00ff66;--color:#00ff66;--original-color:#00ff66" data-text="\n █████╗ ███╗   ██╗███████╗███████╗███╗   ██╗    ██╗     ██╗████████╗███████╗\n██╔══██╗████╗  ██║╚══███╔╝██╔════╝████╗  ██║    ██║     ██║╚══██╔══╝██╔════╝\n███████║██╔██╗ ██║  ███╔╝ █████╗  ██╔██╗ ██║    ██║     ██║   ██║   █████╗\n██╔══██║██║╚██╗██║ ███╔╝  ██╔══╝  ██║╚██╗██║    ██║     ██║   ██║   ██╔══╝\n██║  ██║██║ ╚████║███████╗███████╗██║ ╚████║    ███████╗██║   ██║   ███████╗\n╚═╝  ╚═╝╚═╝  ╚═══╝╚══════╝╚══════╝╚═╝  ╚═══╝    ╚══════╝╚═╝   ╚═╝   ╚══════╝"><span>██╔══██║██║╚██╗██║&nbsp;███╔╝&nbsp;&nbsp;██╔══╝&nbsp;&nbsp;██║╚██╗██║&nbsp;&nbsp;&nbsp;&nbsp;██║&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;██║&nbsp;&nbsp;&nbsp;██║&nbsp;&nbsp;&nbsp;██╔══╝</span></span></div><div style="width: 100%;"><span style="color:#00ff66;--color:#00ff66;--original-color:#00ff66" data-text="\n █████╗ ███╗   ██╗███████╗███████╗███╗   ██╗    ██╗     ██╗████████╗███████╗\n██╔══██╗████╗  ██║╚══███╔╝██╔════╝████╗  ██║    ██║     ██║╚══██╔══╝██╔════╝\n███████║██╔██╗ ██║  ███╔╝ █████╗  ██╔██╗ ██║    ██║     ██║   ██║   █████╗\n██╔══██║██║╚██╗██║ ███╔╝  ██╔══╝  ██║╚██╗██║    ██║     ██║   ██║   ██╔══╝\n██║  ██║██║ ╚████║███████╗███████╗██║ ╚████║    ███████╗██║   ██║   ███████╗\n╚═╝  ╚═╝╚═╝  ╚═══╝╚══════╝╚══════╝╚═╝  ╚═══╝    ╚══════╝╚═╝   ╚═╝   ╚══════╝"><span>██║&nbsp;&nbsp;██║██║&nbsp;╚████║███████╗███████╗██║&nbsp;╚████║&nbsp;&nbsp;&nbsp;&nbsp;███████╗██║&nbsp;&nbsp;&nbsp;██║&nbsp;&nbsp;&nbsp;███████╗</span></span></div><div style="width: 100%;"><span style="color:#00ff66;--color:#00ff66;--original-color:#00ff66" data-text="\n █████╗ ███╗   ██╗███████╗███████╗███╗   ██╗    ██╗     ██╗████████╗███████╗\n██╔══██╗████╗  ██║╚══███╔╝██╔════╝████╗  ██║    ██║     ██║╚══██╔══╝██╔════╝\n███████║██╔██╗ ██║  ███╔╝ █████╗  ██╔██╗ ██║    ██║     ██║   ██║   █████╗\n██╔══██║██║╚██╗██║ ███╔╝  ██╔══╝  ██║╚██╗██║    ██║     ██║   ██║   ██╔══╝\n██║  ██║██║ ╚████║███████╗███████╗██║ ╚████║    ███████╗██║   ██║   ███████╗\n╚═╝  ╚═╝╚═╝  ╚═══╝╚══════╝╚══════╝╚═╝  ╚═══╝    ╚══════╝╚═╝   ╚═╝   ╚══════╝"><span>╚═╝&nbsp;&nbsp;╚═╝╚═╝&nbsp;&nbsp;╚═══╝╚══════╝╚══════╝╚═╝&nbsp;&nbsp;╚═══╝&nbsp;&nbsp;&nbsp;&nbsp;╚══════╝╚═╝&nbsp;&nbsp;&nbsp;╚═╝&nbsp;&nbsp;&nbsp;╚══════╝</span></span></div><div style="width: 100%;"></div><div style="width: 100%;"><span style="color:#66ccff;--color:#66ccff;--original-color:#66ccff" data-text="══════════════════════════════════════════════════════════════════════════"><span>══════════════════════════════════════════════════════════════════════════</span></span></div><div style="width: 100%;"><span data-text=" ">&nbsp;</span><span style="color:#ffff00;--color:#ffff00;--original-color:#ffff00" data-text="               🔐 SECURE ENCRYPTION TERMINAL 🔐                "><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;🔐&nbsp;SECURE&nbsp;ENCRYPTION&nbsp;TERMINAL&nbsp;🔐&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span></div><div style="width: 100%;"><span data-text=" ">&nbsp;</span><span style="color:#00ff66;--color:#00ff66;--original-color:#00ff66" data-text="                Professional Grade Text Encryption              "><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Professional&nbsp;Grade&nbsp;Text&nbsp;Encryption&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span></div><div style="width: 100%;"><span style="color:#66ccff;--color:#66ccff;--original-color:#66ccff" data-text="══════════════════════════════════════════════════════════════════════════"><span>══════════════════════════════════════════════════════════════════════════</span></span></div><div style="width: 100%;"><span data-text=" ">&nbsp;</span><span style="color:#ffff99;--color:#ffff99;--original-color:#ffff99" data-text="🚀 Quick Start Guide:                                         "><span>🚀&nbsp;Quick&nbsp;Start&nbsp;Guide:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span></div><div style="width: 100%;"><span data-text="   ">&nbsp;&nbsp;&nbsp;</span><span style="color:#ff9999;--color:#ff9999;--original-color:#ff9999" data-text="1."><span>1.</span></span><span data-text=" ">&nbsp;</span><span style="color:#ffffff;--color:#ffffff;--original-color:#ffffff" data-text="setpass  "><span>setpass&nbsp;&nbsp;</span></span><span style="color:#888888;--color:#888888;--original-color:#888888" data-text="- Set your encryption passphrase (secure)   "><span>-&nbsp;Set&nbsp;your&nbsp;encryption&nbsp;passphrase&nbsp;(secure)&nbsp;&nbsp;&nbsp;</span></span></div><div style="width: 100%;"><span data-text="   ">&nbsp;&nbsp;&nbsp;</span><span style="color:#ff9999;--color:#ff9999;--original-color:#ff9999" data-text="2."><span>2.</span></span><span data-text=" ">&nbsp;</span><span style="color:#ffffff;--color:#ffffff;--original-color:#ffffff" data-text="encode   "><span>encode&nbsp;&nbsp;&nbsp;</span></span><span style="color:#888888;--color:#888888;--original-color:#888888" data-text="- Encrypt text with style masking   "><span>-&nbsp;Encrypt&nbsp;text&nbsp;with&nbsp;style&nbsp;masking&nbsp;&nbsp;&nbsp;</span></span></div><div style="width: 100%;"><span data-text="   ">&nbsp;&nbsp;&nbsp;</span><span style="color:#ff9999;--color:#ff9999;--original-color:#ff9999" data-text="3."><span>3.</span></span><span data-text=" ">&nbsp;</span><span style="color:#ffffff;--color:#ffffff;--original-color:#ffffff" data-text="decode   "><span>decode&nbsp;&nbsp;&nbsp;</span></span><span style="color:#888888;--color:#888888;--original-color:#888888" data-text="- Decrypt with animated sound effects      "><span>-&nbsp;Decrypt&nbsp;with&nbsp;animated&nbsp;sound&nbsp;effects&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span></div><div style="width: 100%;"><span data-text="   ">&nbsp;&nbsp;&nbsp;</span><span style="color:#ff9999;--color:#ff9999;--original-color:#ff9999" data-text="4."><span>4.</span></span><span data-text=" ">&nbsp;</span><span style="color:#ffffff;--color:#ffffff;--original-color:#ffffff" data-text="sound    "><span>sound&nbsp;&nbsp;&nbsp;&nbsp;</span></span><span style="color:#888888;--color:#888888;--original-color:#888888" data-text="- Toggle audio effects on/off             "><span>-&nbsp;Toggle&nbsp;audio&nbsp;effects&nbsp;on/off&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span></div><div style="width: 100%;"><span style="color:#66ccff;--color:#66ccff;--original-color:#66ccff" data-text="══════════════════════════════════════════════════════════════════════════"><span>══════════════════════════════════════════════════════════════════════════</span></span></div><div style="width: 100%;"><span data-text=" ">&nbsp;</span><span style="color:#99ff99;--color:#99ff99;--original-color:#99ff99" data-text="💡 Features: masking • Animated decoding • Sound FX    "><span>💡&nbsp;Features:&nbsp;masking&nbsp;•&nbsp;Animated&nbsp;decoding&nbsp;•&nbsp;Sound&nbsp;FX&nbsp;&nbsp;&nbsp;&nbsp;</span></span></div><div style="width: 100%;"><span data-text=" ">&nbsp;</span><span style="color:#99ccff;--color:#99ccff;--original-color:#99ccff" data-text="🔒 Security: Passphrase confirmation • Auto-clipboard • AES    "><span>🔒&nbsp;Security:&nbsp;Passphrase&nbsp;confirmation&nbsp;•&nbsp;Auto-clipboard&nbsp;•&nbsp;AES&nbsp;&nbsp;&nbsp;&nbsp;</span></span></div><div style="width: 100%;"><span style="color:#66ccff;--color:#66ccff;--original-color:#66ccff" data-text="══════════════════════════════════════════════════════════════════════════"><span>══════════════════════════════════════════════════════════════════════════</span></span></div><div style="width: 100%;"></div><div style="width: 100%;"><span style="color:#ffff00;--color:#ffff00;--original-color:#ffff00" data-text="▶ SYSTEM READY"><span>▶&nbsp;SYSTEM&nbsp;READY</span></span><span data-text=" ">&nbsp;</span><span style="color:#66ccff;--color:#66ccff;--original-color:#66ccff" data-text="- Type"><span>-&nbsp;Type</span></span><span data-text=" ">&nbsp;</span><span style="color:#00ff66;--color:#00ff66;--original-color:#00ff66" data-text="help"><span>help</span></span><span data-text=" ">&nbsp;</span><span style="color:#66ccff;--color:#66ccff;--original-color:#66ccff" data-text="for complete command list"><span>for&nbsp;complete&nbsp;command&nbsp;list</span></span></div><div class="cmd-end-line" style="width: 100%;"><span style="color:#ffff00;--color:#ffff00;--original-color:#ffff00" data-text="▶ STATUS:"><span>▶&nbsp;STATUS:</span></span><span data-text=" ">&nbsp;</span><span style="color:#ff6600;--color:#ff6600;--original-color:#ff6600" data-text="Passphrase not set"><span>Passphrase&nbsp;not&nbsp;set</span></span><span data-text=" ">&nbsp;</span><span style="color:#66ccff;--color:#66ccff;--original-color:#66ccff" data-text="•"><span>•</span></span><span data-text=" ">&nbsp;</span><span style="color:#ff6600;--color:#ff6600;--original-color:#ff6600" data-text="Sound effects disabled"><span>Sound&nbsp;effects&nbsp;disabled</span></span></div></div><div data-index="1"><div style="width: 100%;"></div><div class="cmd-end-line" style="width: 100%;"><span style="color:#ffff00;--color:#ffff00;--original-color:#ffff00" data-text="AVAILABLE COMMANDS"><span>AVAILABLE&nbsp;COMMANDS</span></span></div></div><div data-index="2"><div style="width: 100%;"><span style="color:#00ff66;--color:#00ff66;--original-color:#00ff66" data-text="help"><span>help</span></span><span data-text="                    ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color:#888888;--color:#888888;--original-color:#888888" data-text="- Show this help message"><span>-&nbsp;Show&nbsp;this&nbsp;help&nbsp;message</span></span></div></div><div data-index="3"><div style="width: 100%;"><span style="color:#00ff66;--color:#00ff66;--original-color:#00ff66" data-text="setpass"><span>setpass</span></span><span data-text="                 ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color:#888888;--color:#888888;--original-color:#888888" data-text="- Set encryption passphrase"><span>-&nbsp;Set&nbsp;encryption&nbsp;passphrase</span></span></div></div><div data-index="4"><div style="width: 100%;"><span style="color:#00ff66;--color:#00ff66;--original-color:#00ff66" data-text="encode"><span>encode</span></span><span data-text="                  ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color:#888888;--color:#888888;--original-color:#888888" data-text="- Encode text with secure masking"><span>-&nbsp;Encode&nbsp;text&nbsp;with&nbsp;secure&nbsp;masking</span></span></div></div><div data-index="5"><div style="width: 100%;"><span style="color:#00ff66;--color:#00ff66;--original-color:#00ff66" data-text="decode &lt;text&gt;"><span>decode&nbsp;&lt;text&gt;</span></span><span data-text="           ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color:#888888;--color:#888888;--original-color:#888888" data-text="- Decode with animated reveal + sound effects"><span>-&nbsp;Decode&nbsp;with&nbsp;animated&nbsp;reveal&nbsp;+&nbsp;sound&nbsp;effects</span></span></div></div><div data-index="6"><div style="width: 100%;"><span style="color:#00ff66;--color:#00ff66;--original-color:#00ff66" data-text="sound"><span>sound</span></span><span data-text="                   ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color:#888888;--color:#888888;--original-color:#888888" data-text="- Toggle computerized sound effects"><span>-&nbsp;Toggle&nbsp;computerized&nbsp;sound&nbsp;effects</span></span></div></div><div data-index="7"><div style="width: 100%;"><span style="color:#00ff66;--color:#00ff66;--original-color:#00ff66" data-text="copy"><span>copy</span></span><span data-text="                    ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color:#888888;--color:#888888;--original-color:#888888" data-text="- Copy last encoded text to clipboard"><span>-&nbsp;Copy&nbsp;last&nbsp;encoded&nbsp;text&nbsp;to&nbsp;clipboard</span></span></div></div><div data-index="8"><div style="width: 100%;"><span style="color:#00ff66;--color:#00ff66;--original-color:#00ff66" data-text="clear"><span>clear</span></span><span data-text="                   ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color:#888888;--color:#888888;--original-color:#888888" data-text="- Clear the terminal screen"><span>-&nbsp;Clear&nbsp;the&nbsp;terminal&nbsp;screen</span></span></div></div><div data-index="9"><div style="width: 100%;"><span style="color:#00ff66;--color:#00ff66;--original-color:#00ff66" data-text="about"><span>about</span></span><span data-text="                   ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color:#888888;--color:#888888;--original-color:#888888" data-text="- About AnzenLite encryption system"><span>-&nbsp;About&nbsp;AnzenLite&nbsp;encryption&nbsp;system</span></span></div></div><div data-index="10"><div style="width: 100%;"><span style="color:#00ff66;--color:#00ff66;--original-color:#00ff66" data-text="exit"><span>exit</span></span><span data-text="                    ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color:#888888;--color:#888888;--original-color:#888888" data-text="- Exit the terminal"><span>-&nbsp;Exit&nbsp;the&nbsp;terminal</span></span></div></div><div data-index="11"><div style="width: 100%;"></div><div class="cmd-end-line" style="width: 100%;"><span style="color:#ffff99;--color:#ffff99;--original-color:#ffff99" data-text="💡 Pro Tip:"><span>💡&nbsp;Pro&nbsp;Tip:</span></span><span data-text=" Start with ">&nbsp;Start&nbsp;with&nbsp;</span><span style="color:#00ff66;--color:#00ff66;--original-color:#00ff66" data-text="setpass"><span>setpass</span></span><span data-text=" to create your encryption key!">&nbsp;to&nbsp;create&nbsp;your&nbsp;encryption&nbsp;key!</span></div></div><div data-index="12"><div style="width: 100%;"><span style="color:#66ccff;--color:#66ccff;--original-color:#66ccff" data-text="🔐 All text is encrypted with military-grade AES-256 encryption"><span>🔐&nbsp;All&nbsp;text&nbsp;is&nbsp;encrypted&nbsp;with&nbsp;military-grade&nbsp;AES-256&nbsp;encryption</span></span></div></div></div><div class="cmd enabled" style="width: 100%; --cursor-line: 0;"><div class="cmd-wrapper" style=""><span class="cmd-prompt" style="visibility: visible;"><span style="color:#ff6600;--color:#ff6600;--original-color:#ff6600" data-text="anzen@lite:~$"><span style="width: 13ch;">anzen@lite:~$</span></span><span data-text=" "><span style="width: 1ch;">&nbsp;</span></span></span><div class="cmd-cursor-line" role="presentation" aria-hidden="true"><span></span><span class="cmd-cursor cmd-blink" style=""><span data-text="" class="end"><span>&nbsp;<span></span></span></span></span><span></span></div></div><label class="visually-hidden" for="og3q63">Clipbard textarea for jQuery Terminal</label><textarea autocapitalize="off" spellcheck="false" id="og3q63" tabindex="1" class="cmd-clipboard" data-cmd-prompt="anzen@lite:~$ " style=""></textarea></div></div><div class="terminal-fill"></div><div class="terminal-scroll-marker"><div style="height:20px;height:calc(20px / var(--pixel-density, 1))"></div></div></div><div class="terminal-font">&nbsp;</div><div class="terminal-pixel"></div></div>
+
+        <script>
+            $(function () {
+                /* ─────────────── ANZEN LITE ENCRYPTION TERMINAL ─────────────── */
+
+                let lastEncryptedText = "";
+                let globalPassphrase = "";
+
+                const masked = (s, keepLast = true) =>
+                    s.length
+                        ? keepLast
+                            ? "*".repeat(s.length - 1) + s.at(-1)
+                            : "*".repeat(s.length)
+                        : "";
+
+                function copyToClipboard(txt) {
+                    return navigator.clipboard
+                        .writeText(txt)
+                        .then(() => true)
+                        .catch(() => false);
+                }
+
+                function encryptWithPassphrase(txt, pass) {
+                    if (!pass) throw Error("Passphrase cannot be empty");
+                    return CryptoJS.AES.encrypt(txt, pass).toString();
+                }
+                function decryptWithPassphrase(ct, pass) {
+                    if (!pass) throw Error("Passphrase cannot be empty");
+                    const res = CryptoJS.AES.decrypt(ct, pass).toString(
+                        CryptoJS.enc.Utf8,
+                    );
+                    if (!res)
+                        throw Error("Invalid passphrase or corrupted data");
+                    return res;
+                }
+
+                /* ─────────────── sound (original implementation kept) ─────────────── */
+
+                class TerminalSounds {
+                    constructor() {
+                        this.audioContext = null;
+                        this.enabled = false;
+                        this.soundEnabled = false;
+                        this.init();
+                    }
+                    async init() {
+                        try {
+                            this.audioContext = new (window.AudioContext ||
+                                window.webkitAudioContext)();
+                            this.enabled = true;
+                        } catch {}
+                    }
+                    async unlock() {
+                        if (
+                            this.audioContext &&
+                            this.audioContext.state === "suspended"
+                        )
+                            await this.audioContext.resume();
+                    }
+                    play(type, freq, len = 0.08) {
+                        if (!this.enabled || !this.soundEnabled) return;
+                        const o = this.audioContext.createOscillator(),
+                            g = this.audioContext.createGain();
+                        o.connect(g);
+                        g.connect(this.audioContext.destination);
+                        o.type = "square";
+                        o.frequency.setValueAtTime(
+                            freq,
+                            this.audioContext.currentTime,
+                        );
+                        g.gain.setValueAtTime(
+                            0.08,
+                            this.audioContext.currentTime,
+                        );
+                        g.gain.setValueAtTime(
+                            0,
+                            this.audioContext.currentTime + len,
+                        );
+                        o.start(this.audioContext.currentTime);
+                        o.stop(this.audioContext.currentTime + len);
+                    }
+                    playWordReveal() {
+                        this.play("reveal", 1000, 0.05);
+                    }
+                    playMaskSound() {
+                        this.play("mask", 400, 0.08);
+                    }
+                    playCompleteSound() {
+                        [600, 900, 1200].forEach((f, i) =>
+                            this.play("done", f, 0.08, i * 0.1),
+                        );
+                    }
+                    toggleSound() {
+                        this.soundEnabled = !this.soundEnabled;
+                        return this.soundEnabled;
+                    }
+                }
+                const terminalSounds = new TerminalSounds();
+
+                /* ─────────────── animated reveal (single copy) ─────────────── */
+
+                function animatedWordReveal(term, text) {
+                    const words = text.split(" "),
+                        visible = 3,
+                        delay = 500;
+                    let idx = 0,
+                        lineId = "dec_" + Date.now(),
+                        prevMask = -1;
+                    terminalSounds.unlock();
+                    function show() {
+                        term.find("#" + lineId).remove();
+                        const line = words
+                            .map((w, i) => {
+                                if (i < idx - visible)
+                                    return (
+                                        "[[;#ff6600;]" +
+                                        "*".repeat(w.length) +
+                                        "]"
+                                    );
+                                if (i < idx) return "[[;#00ff66;]" + w + "]";
+                                return "[[;#444;]" + "·".repeat(w.length) + "]";
+                            })
+                            .join(" ");
+                        term.echo("[[;#66ccff;]Decoded:] " + line, {
+                            finalize: (d) => d.attr("id", lineId),
+                        });
+                    }
+                    (function step() {
+                        const maskStart = Math.max(0, idx - visible);
+                        if (idx <= words.length)
+                            terminalSounds.playWordReveal();
+                        if (maskStart > prevMask && prevMask >= 0)
+                            setTimeout(
+                                () => terminalSounds.playMaskSound(),
+                                200,
+                            );
+                        prevMask = maskStart;
+                        show();
+                        idx++;
+                        if (idx <= words.length + visible)
+                            setTimeout(step, delay);
+                        else
+                            setTimeout(
+                                () => terminalSounds.playCompleteSound(),
+                                250,
+                            );
+                    })();
+                }
+
+                /* ─────────────── secure masked prompt helper ─────────────── */
+
+                function maskedPrompt(term, label, callback) {
+                    let val = "",
+                        active = false;
+                    function handler(e) {
+                        if (!active) return;
+                        const k = e.key;
+                        if (k === "Enter" && !e.shiftKey) {
+                            e.preventDefault();
+                            term.set_command(masked(val, false));
+                            callback(val);
+                            term.pop();
+                            document.removeEventListener(
+                                "keydown",
+                                handler,
+                                true,
+                            );
+                            return;
+                        }
+                        if (k === "Backspace") {
+                            e.preventDefault();
+                            val = val.slice(0, -1);
+                        } else if (k.length === 1) {
+                            e.preventDefault();
+                            val += k;
+                        }
+                        term.set_command(masked(val, true));
+                    }
+                    document.addEventListener("keydown", handler, true); // capture phase
+                    term.push(() => {}, {
+                        prompt: `[[;#ffff00;]${label}:] `,
+                        echoCommand: false,
+                    });
+                    active = true;
+                }
+
+                /* ─────────────── commands ─────────────── */
+
+                let lastEncrypted = "";
+                const commands = {
+                    help() {
+                        this.echo(
+                            "[[;#ffff00;]ANZEN LITE HELP]",
+                        );
+                        this.echo("[[;#66ccff;]🔐 ENCRYPTION COMMANDS:]");
+                        this.echo(
+                            "  [[;#00ff66;]setpass]                 [[;#888888;]- Set encryption passphrase (secure input)]",
+                        );
+                        this.echo(
+                            "  [[;#00ff66;]encode]                  [[;#888888;]- Encode text with secure masking]",
+                        );
+                        this.echo(
+                            "  [[;#00ff66;]decode <encrypted>]      [[;#888888;]- Decode with animated reveal + sound effects]",
+                        );
+                        this.echo("");
+                        this.echo("[[;#66ccff;]🔧 UTILITY COMMANDS:]");
+                        this.echo(
+                            "  [[;#00ff66;]sound]                   [[;#888888;]- Toggle computerized sound effects]",
+                        );
+                        this.echo(
+                            "  [[;#00ff66;]copy]                    [[;#888888;]- Copy last encoded text to clipboard]",
+                        );
+                        this.echo(
+                            "  [[;#00ff66;]clear]                   [[;#888888;]- Clear terminal screen]",
+                        );
+                        this.echo(
+                            "  [[;#00ff66;]about]                   [[;#888888;]- About AnzenLite system]",
+                        );
+                        this.echo(
+                            "  [[;#00ff66;]exit]                    [[;#888888;]- Exit terminal]",
+                        );
+                        this.echo("");
+                        const passSet =
+                            this.get_token() || window.anzenPassphrase;
+                        this.echo(
+                            `[[;#ffff99;]📊 STATUS:] Passphrase ${passSet ? "[[;#00ff66;]✓ Set]" : "[[;#ff6600;]✗ Not Set]"} • Sound ${terminalSounds.soundEnabled ? "[[;#00ff66;]ON]" : "[[;#ff6600;]OFF]"}`,
+                        );
+                        this.echo(
+                            "[[;#66ccff;]💡 TIP:] Start with [[;#00ff66;]setpass] to create your encryption key!",
+                        );
+                    },
+
+                    setpass() {
+                        const t = this;
+                        t.echo("[[;#ffff00;]🔐 PASSPHRASE SETUP]");
+                        t.echo(
+                            "[[;#66ccff;]Creating secure encryption key...]",
+                        );
+                        t.echo(
+                            "[[;#99ccff;]• Only last character visible while typing]",
+                        );
+                        t.echo("[[;#99ccff;]• Minimum 4 characters required]");
+                        t.echo(
+                            "[[;#99ccff;]• Use a strong, memorable passphrase]",
+                        );
+                        t.echo("");
+
+                        maskedPrompt(t, "Enter Passphrase", (first) => {
+                            if (!first || first.trim() === "") {
+                                t.echo(
+                                    "[[;#ff6600;]❌ Error:] Passphrase cannot be empty",
+                                );
+                                return;
+                            }
+                            if (first.length < 4) {
+                                t.echo(
+                                    "[[;#ff6600;]❌ Error:] Passphrase must be at least 4 characters long",
+                                );
+                                t.echo(
+                                    "[[;#66ccff;]💡 Try again with a longer passphrase]",
+                                );
+                                return;
+                            }
+
+                            t.echo("[[;#ffff99;]🔄 Confirming passphrase...]");
+                            maskedPrompt(t, "Confirm Passphrase", (second) => {
+                                if (second !== first) {
+                                    t.echo(
+                                        "[[;#ff6600;]❌ Error:] Passphrases do not match. Please try again.",
+                                    );
+                                    t.echo(
+                                        "[[;#66ccff;]💡 Make sure you type the same passphrase both times]",
+                                    );
+                                    return;
+                                }
+                                t.set_token(first);
+                                window.anzenPassphrase = first;
+                                globalPassphrase = first;
+                                t.echo(
+                                    "[[;#00ff66;]✅ Passphrase set successfully!]",
+                                );
+                                t.echo(
+                                    "[[;#ffff00;]⚠️  IMPORTANT:] Remember this passphrase - it cannot be recovered!",
+                                );
+                                t.echo(
+                                    "[[;#66ccff;]🎯 You can now use] [[;#00ff66;]encode] [[;#66ccff;]to encrypt text]",
+                                );
+                            });
+                        });
+                    },
+
+                    encode(arg) {
+                        if (arg) {
+                            return "[[;#ff6600;]🔒 Security Notice:] Please use [[;#00ff66;]encode] without arguments for secure input\n[[;#66ccff;]💡 Usage:] Just type [[;#00ff66;]encode] and enter text when prompted";
+                        }
+
+                        const pass =
+                            this.get_token() ||
+                            window.anzenPassphrase ||
+                            globalPassphrase;
+                        if (!pass) {
+                            return "[[;#ff6600;]❌ Error:] No passphrase set. Use [[;#00ff66;]setpass] first\n[[;#66ccff;]💡 Tip:] Set up your encryption key before encoding text";
+                        }
+
+                        this.echo("[[;#ffff00;]🔐 TEXT ENCODING MODE]");
+                        this.echo(
+                            "[[;#66ccff;]Secure text input with masking enabled...]",
+                        );
+                        this.echo(
+                            "[[;#99ccff;]• Your text will be encrypted with AES-256]",
+                        );
+                        this.echo(
+                            "[[;#99ccff;]• Only last character visible while typing]",
+                        );
+                        this.echo(
+                            "[[;#99ccff;]• Auto-copied to clipboard when complete]",
+                        );
+                        this.echo("");
+
+                        maskedPrompt(this, "Enter Text to Encode", (plain) => {
+                            if (!plain || plain.trim() === "") {
+                                this.echo(
+                                    "[[;#ff6600;]❌ Error:] No text entered to encode",
+                                );
+                                return;
+                            }
+                            try {
+                                const cipher = encryptWithPassphrase(
+                                    plain,
+                                    pass,
+                                );
+                                lastEncrypted = cipher;
+                                lastEncryptedText = cipher;
+
+                                copyToClipboard(cipher).then((success) => {
+                                    if (success) {
+                                        this.echo(
+                                            "[[;#ffff00;]📋 Encoded text copied to clipboard!]",
+                                        );
+                                    } else {
+                                        this.echo(
+                                            "[[;#ff6600;]⚠️  Could not copy to clipboard. Please copy manually.]",
+                                        );
+                                    }
+                                });
+
+                                this.echo("[[;#00ff66;]✅ ENCODING COMPLETE]");
+                                this.echo(
+                                    `[[;#00ff66;]Encoded Text:] ${cipher}`,
+                                );
+                                this.echo(
+                                    "[[;#66ccff;]🔗 Share this encoded text with the recipient]",
+                                );
+                                this.echo(
+                                    "[[;#99ccff;]💡 Use] [[;#00ff66;]copy] [[;#99ccff;]command to copy again later]",
+                                );
+                            } catch (e) {
+                                this.echo(
+                                    `[[;#ff6600;]❌ Encoding failed:] ${e.message}`,
+                                );
+                            }
+                        });
+                    },
+
+                    decode(text) {
+                        if (!text) {
+                            return "[[;#ff6600;]❌ Error:] Please provide encoded text to decode\n[[;#66ccff;]💡 Usage:] [[;#00ff66;]decode <encoded_text>]\n[[;#99ccff;]Example:] decode U2FsdGVkX1+2xmFz...";
+                        }
+
+                        const pass =
+                            this.get_token() ||
+                            window.anzenPassphrase ||
+                            globalPassphrase;
+                        if (!pass) {
+                            return "[[;#ff6600;]❌ Error:] No passphrase set. Use [[;#00ff66;]setpass] first\n[[;#66ccff;]💡 Tip:] You need the same passphrase used for encoding";
+                        }
+
+                        this.echo("[[;#ffff00;]🔓 TEXT DECODING MODE]");
+                        this.echo(
+                            "[[;#66ccff;]Attempting to decode with current passphrase...]",
+                        );
+                        this.echo(
+                            "[[;#99ccff;]• Progressive word-by-word reveal]",
+                        );
+                        this.echo(
+                            "[[;#99ccff;]• Automatic text masking for security]",
+                        );
+                        if (terminalSounds.soundEnabled) {
+                            this.echo("[[;#99ccff;]• Sound effects enabled]");
+                        }
+                        this.echo("");
+
+                        try {
+                            const plain = decryptWithPassphrase(text, pass);
+                            this.echo("[[;#00ff66;]✅ DECODING SUCCESSFUL]");
+                            this.echo(
+                                "[[;#ffff99;]🎬 Starting animated reveal with sound effects...]",
+                            );
+                            if (!terminalSounds.soundEnabled) {
+                                this.echo(
+                                    "[[;#66ccff;]💡 Type] [[;#00ff66;]sound] [[;#66ccff;]to enable audio effects!]",
+                                );
+                            }
+                            this.echo("");
+                            animatedWordReveal(this, plain);
+                        } catch (e) {
+                            return `[[;#ff6600;]❌ Decoding failed:] ${e.message}\n[[;#66ccff;]💡 Common issues:]\n[[;#99ccff;]• Wrong passphrase]\n[[;#99ccff;]• Corrupted encoded text]\n[[;#99ccff;]• Text not properly copied]`;
+                        }
+                        return "";
+                    },
+
+                    copy() {
+                        if (!lastEncrypted && !lastEncryptedText) {
+                            return "[[;#ff6600;]❌ Error:] No encoded text available to copy\n[[;#66ccff;]💡 Tip:] Use [[;#00ff66;]encode] to create text first";
+                        }
+
+                        const textToCopy = lastEncrypted || lastEncryptedText;
+                        this.echo(
+                            "[[;#ffff99;]📋 Copying encoded text to clipboard...]",
+                        );
+
+                        copyToClipboard(textToCopy).then((success) => {
+                            if (success) {
+                                this.echo(
+                                    "[[;#00ff66;]✅ Successfully copied to clipboard!]",
+                                );
+                                this.echo(
+                                    "[[;#66ccff;]🔗 You can now paste this anywhere to share]",
+                                );
+                                this.echo(
+                                    "[[;#99ccff;]💡 The recipient needs the same passphrase to decode]",
+                                );
+                            } else {
+                                this.echo(
+                                    "[[;#ff6600;]❌ Failed to copy to clipboard]",
+                                );
+                                this.echo(
+                                    "[[;#66ccff;]📝 Manual copy - select text below:]",
+                                );
+                                this.echo(`[[;#ffff00;]${textToCopy}]`);
+                            }
+                        });
+
+                        return "";
+                    },
+
+                    sound() {
+                        const isEnabled = terminalSounds.toggleSound();
+
+                        if (isEnabled) {
+                            this.echo("[[;#00ff66;]🔊 SOUND EFFECTS ENABLED]");
+                            this.echo("[[;#66ccff;]Audio features activated:]");
+                            this.echo(
+                                "[[;#99ccff;]• Word reveal beeps during decode]",
+                            );
+                            this.echo(
+                                "[[;#99ccff;]• Text masking sound effects]",
+                            );
+                            this.echo(
+                                "[[;#99ccff;]• Completion notification sounds]",
+                            );
+                            this.echo(
+                                "[[;#ffff99;]🎵 Try] [[;#00ff66;]decode] [[;#ffff99;]to experience the audio!]",
+                            );
+
+                            // Play a demo sound
+                            setTimeout(() => {
+                                terminalSounds.playWordReveal();
+                                setTimeout(
+                                    () => terminalSounds.playCompleteSound(),
+                                    300,
+                                );
+                            }, 500);
+                        } else {
+                            this.echo("[[;#ff6600;]🔇 SOUND EFFECTS DISABLED]");
+                            this.echo("[[;#66ccff;]Audio features turned off]");
+                            this.echo("[[;#99ccff;]• Silent operation mode]");
+                            this.echo("[[;#99ccff;]• Visual-only feedback]");
+                            this.echo(
+                                "[[;#ffff99;]💡 Type] [[;#00ff66;]sound] [[;#ffff99;]again to re-enable audio]",
+                            );
+                        }
+
+                        return "";
+                    },
+
+                    clear() {
+                        this.echo(
+                            "[[;#ffff99;]🧹 Clearing terminal screen...]",
+                        );
+                        setTimeout(() => {
+                            this.clear();
+                            this.echo(
+                                "[[;#ffff00;]▶ TERMINAL CLEARED] [[;#66ccff;]- Type] [[;#00ff66;]help] [[;#66ccff;]for commands]",
+                            );
+                        }, 800);
+                    },
+
+                    about() {
+                        this.echo(
+                            "[[;#ffff00;]═══════════════ ABOUT ANZEN LITE ═══════════════]",
+                        );
+                        this.echo(
+                            "[[;#00ff66;]🔐 AnzenLite Secure Encryption Terminal v2.0]",
+                        );
+                        this.echo("");
+                        this.echo("[[;#66ccff;]🛡️  SECURITY FEATURES:]");
+                        this.echo(
+                            "[[;#99ccff;]• AES-256 military-grade encryption]",
+                        );
+                        this.echo("[[;#99ccff;]• Input masking]");
+                        this.echo(
+                            "[[;#99ccff;]• Passphrase confirmation system]",
+                        );
+                        this.echo("[[;#99ccff;]• Auto-clipboard integration]");
+                        this.echo("[[;#99ccff;]• Zero data persistence]");
+                        this.echo("");
+                        this.echo("[[;#66ccff;]🎮 EXPERIENCE FEATURES:]");
+                        this.echo(
+                            "[[;#99ccff;]• Animated word-by-word decoding]",
+                        );
+                        this.echo("[[;#99ccff;]• Computerized sound effects]");
+                        this.echo("[[;#99ccff;]• Progressive text masking]");
+                        this.echo(
+                            "[[;#99ccff;]• Movie-style terminal interface]",
+                        );
+                        this.echo("");
+                        this.echo("[[;#66ccff;]🔒 PRIVACY:]");
+                        this.echo(
+                            "[[;#99ccff;]• All encryption happens locally in your browser]",
+                        );
+                        this.echo("[[;#99ccff;]• No data sent to servers]");
+                        this.echo(
+                            "[[;#99ccff;]• Passphrases never stored permanently]",
+                        );
+                        this.echo("");
+                        this.echo(
+                            "[[;#ffff99;]💡 Perfect for secure communication, password sharing, and sensitive notes!]",
+                        );
+                    },
+
+                    exit() {
+                        this.echo(
+                            "[[;#ffff00;]🚪 EXITING ANZEN LITE TERMINAL]",
+                        );
+                        this.echo(
+                            "[[;#66ccff;]Thank you for using AnzenLite Secure Encryption!]",
+                        );
+                        this.echo("[[;#99ccff;]• All session data cleared]");
+                        this.echo(
+                            "[[;#99ccff;]• Passphrases removed from memory]",
+                        );
+                        this.echo(
+                            "[[;#00ff66;]🔒 Your privacy and security remain intact]",
+                        );
+                        this.echo("");
+                        this.echo("[[;#ffff99;]👋 Stay secure! Goodbye!]");
+
+                        setTimeout(() => {
+                            // Clear sensitive data
+                            globalPassphrase = "";
+                            window.anzenPassphrase = "";
+                            this.set_token("");
+                            this.echo(
+                                "[[;#ff6600;]⚠️  Terminal session terminated]",
+                            );
+                        }, 2000);
+                    },
+                };
+
+                /* ─────────────── greetings & visuals ─────────────── */
+
+                const asciiArt = `[[;#00ff66;]
+ █████╗ ███╗   ██╗███████╗███████╗███╗   ██╗    ██╗     ██╗████████╗███████╗
+██╔══██╗████╗  ██║╚══███╔╝██╔════╝████╗  ██║    ██║     ██║╚══██╔══╝██╔════╝
+███████║██╔██╗ ██║  ███╔╝ █████╗  ██╔██╗ ██║    ██║     ██║   ██║   █████╗
+██╔══██║██║╚██╗██║ ███╔╝  ██╔══╝  ██║╚██╗██║    ██║     ██║   ██║   ██╔══╝
+██║  ██║██║ ╚████║███████╗███████╗██║ ╚████║    ███████╗██║   ██║   ███████╗
+╚═╝  ╚═╝╚═╝  ╚═══╝╚══════╝╚══════╝╚═╝  ╚═══╝    ╚══════╝╚═╝   ╚═╝   ╚══════╝]
+
+[[;#66ccff;]══════════════════════════════════════════════════════════════════════════]
+[[;#66ccff;]] [[;#ffff00;]               🔐 SECURE ENCRYPTION TERMINAL 🔐                ][[;#66ccff;]]
+[[;#66ccff;]] [[;#00ff66;]                Professional Grade Text Encryption              ][[;#66ccff;]]
+[[;#66ccff;]══════════════════════════════════════════════════════════════════════════]
+[[;#66ccff;]] [[;#ffff99;]🚀 Quick Start Guide:                                         ][[;#66ccff;]]
+[[;#66ccff;]]   [[;#ff9999;]1.] [[;#ffffff;]setpass  ][[;#888888;]- Set your encryption passphrase (secure)   ][[;#66ccff;]]
+[[;#66ccff;]]   [[;#ff9999;]2.] [[;#ffffff;]encode   ][[;#888888;]- Encrypt text with style masking   ][[;#66ccff;]]
+[[;#66ccff;]]   [[;#ff9999;]3.] [[;#ffffff;]decode   ][[;#888888;]- Decrypt with animated sound effects      ][[;#66ccff;]]
+[[;#66ccff;]]   [[;#ff9999;]4.] [[;#ffffff;]sound    ][[;#888888;]- Toggle audio effects on/off             ][[;#66ccff;]]
+[[;#66ccff;]══════════════════════════════════════════════════════════════════════════]
+[[;#66ccff;]] [[;#99ff99;]💡 Features: masking • Animated decoding • Sound FX    ][[;#66ccff;]]
+[[;#66ccff;]] [[;#99ccff;]🔒 Security: Passphrase confirmation • Auto-clipboard • AES    ][[;#66ccff;]]
+[[;#66ccff;]══════════════════════════════════════════════════════════════════════════]
+
+[[;#ffff00;]▶ SYSTEM READY] [[;#66ccff;]- Type] [[;#00ff66;]help] [[;#66ccff;]for complete command list]
+[[;#ffff00;]▶ STATUS:] [[;#ff6600;]Passphrase not set] [[;#66ccff;]•] [[;#ff6600;]Sound effects disabled]`;
+
+                /* ─────────────── terminal init ─────────────── */
+
+                const terminal = $("#terminal").terminal(
+                    function (cmd) {
+                        const [c, ...rest] = cmd.trim().split(" ");
+                        if (commands[c]) {
+                            const out = commands[c].call(this, rest.join(" "));
+                            if (out) this.echo(out);
+                        } else if (cmd.trim()) {
+                            this.echo(`[[;#ff6600;]Command not found:] ${cmd}`);
+                            this.echo(
+                                "[[;#66ccff;]Type] [[;#00ff66;]help] [[;#66ccff;]for available commands]",
+                            );
+                        }
+                    },
+                    {
+                        greetings: asciiArt,
+                        prompt: "[[;#ff6600;]anzen@lite:~$] ",
+                        height: "100%",
+                        width: "100%",
+                        scrollOnEcho: true,
+                        echoCommand: false,
+                    },
+                );
+
+                // Auto-display help after welcome message
+                setTimeout(() => {
+                    terminal.echo("\n[[;#ffff00;]AVAILABLE COMMANDS]");
+                    terminal.echo(
+                        "[[;#00ff66;]help]                    [[;#888888;]- Show this help message]",
+                    );
+                    terminal.echo(
+                        "[[;#00ff66;]setpass]                 [[;#888888;]- Set encryption passphrase]",
+                    );
+                    terminal.echo(
+                        "[[;#00ff66;]encode]                  [[;#888888;]- Encode text with secure masking]",
+                    );
+                    terminal.echo(
+                        "[[;#00ff66;]decode <text>]           [[;#888888;]- Decode with animated reveal + sound effects]",
+                    );
+                    terminal.echo(
+                        "[[;#00ff66;]sound]                   [[;#888888;]- Toggle computerized sound effects]",
+                    );
+                    terminal.echo(
+                        "[[;#00ff66;]copy]                    [[;#888888;]- Copy last encoded text to clipboard]",
+                    );
+                    terminal.echo(
+                        "[[;#00ff66;]clear]                   [[;#888888;]- Clear the terminal screen]",
+                    );
+                    terminal.echo(
+                        "[[;#00ff66;]about]                   [[;#888888;]- About AnzenLite encryption system]",
+                    );
+                    terminal.echo(
+                        "[[;#00ff66;]exit]                    [[;#888888;]- Exit the terminal]",
+                    );
+                    terminal.echo(
+                        "\n[[;#ffff99;]💡 Pro Tip:] Start with [[;#00ff66;]setpass] to create your encryption key!",
+                    );
+                    terminal.echo(
+                        "[[;#66ccff;]🔐 All text is encrypted with military-grade AES-256 encryption]",
+                    );
+                }, 1500);
+            });
+        </script>
+    <script defer="" src="./AnzenLite Terminal - Secure Encryption Suite_files/vcd15cbe7772f49c399c6a5babf22c1241717689176015" integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==" data-cf-beacon="{&quot;version&quot;:&quot;2024.11.0&quot;,&quot;token&quot;:&quot;8c8004b60e864ebfa63f02694cbd1c31&quot;,&quot;r&quot;:1,&quot;server_timing&quot;:{&quot;name&quot;:{&quot;cfCacheStatus&quot;:true,&quot;cfEdge&quot;:true,&quot;cfExtPri&quot;:true,&quot;cfL4&quot;:true,&quot;cfOrigin&quot;:true,&quot;cfSpeedBrain&quot;:true},&quot;location_startswith&quot;:null}}" crossorigin="anonymous"></script>
+
+
+</body></html>
