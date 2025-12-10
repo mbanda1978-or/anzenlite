@@ -1,24 +1,99 @@
-// Core encryption helpers preserved from the legacy /static/v3 page
-function requireCrypto() {
-  if (typeof CryptoJS === 'undefined') {
-    throw new Error('CryptoJS library is unavailable.');
+// Modern encryption helpers using the built-in Web Crypto API
+const encoder = new TextEncoder();
+const decoder = new TextDecoder();
+
+function ensureWebCrypto() {
+  if (typeof crypto === 'undefined' || !crypto.subtle) {
+    throw new Error('Web Crypto API is unavailable in this browser.');
   }
 }
 
-function encodeMessage(plainText, passkey) {
-  if (!passkey) throw new Error('Passphrase cannot be empty');
-  requireCrypto();
-  return CryptoJS.AES.encrypt(plainText, passkey).toString();
+async function deriveKey(passkey, salt) {
+  const keyMaterial = await crypto.subtle.importKey(
+    'raw',
+    encoder.encode(passkey),
+    'PBKDF2',
+    false,
+    ['deriveKey'],
+  );
+
+  return crypto.subtle.deriveKey(
+    {
+      name: 'PBKDF2',
+      salt,
+      iterations: 100000,
+      hash: 'SHA-256',
+    },
+    keyMaterial,
+    {
+      name: 'AES-GCM',
+      length: 256,
+    },
+    false,
+    ['encrypt', 'decrypt'],
+  );
 }
 
-function decodeMessage(cipherText, passkey) {
+function toBase64(buffer) {
+  const bytes = new Uint8Array(buffer);
+  let binary = '';
+  bytes.forEach((b) => {
+    binary += String.fromCharCode(b);
+  });
+  return btoa(binary);
+}
+
+function fromBase64(input) {
+  const binary = atob(input);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i += 1) {
+    bytes[i] = binary.charCodeAt(i);
+  }
+  return bytes;
+}
+
+async function encodeMessage(plainText, passkey) {
   if (!passkey) throw new Error('Passphrase cannot be empty');
-  requireCrypto();
-  const result = CryptoJS.AES.decrypt(cipherText, passkey).toString(
-    CryptoJS.enc.Utf8,
+  ensureWebCrypto();
+
+  const salt = crypto.getRandomValues(new Uint8Array(16));
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const key = await deriveKey(passkey, salt);
+
+  const cipherBuffer = await crypto.subtle.encrypt(
+    { name: 'AES-GCM', iv },
+    key,
+    encoder.encode(plainText),
   );
-  if (!result) throw new Error('Invalid passphrase or corrupted data');
-  return result;
+
+  const payload = new Uint8Array(salt.length + iv.length + cipherBuffer.byteLength);
+  payload.set(salt, 0);
+  payload.set(iv, salt.length);
+  payload.set(new Uint8Array(cipherBuffer), salt.length + iv.length);
+
+  return toBase64(payload.buffer);
+}
+
+async function decodeMessage(cipherText, passkey) {
+  if (!passkey) throw new Error('Passphrase cannot be empty');
+  ensureWebCrypto();
+
+  const payload = fromBase64(cipherText);
+  if (payload.byteLength <= 28) {
+    throw new Error('Invalid cipher payload.');
+  }
+
+  const salt = payload.slice(0, 16);
+  const iv = payload.slice(16, 28);
+  const data = payload.slice(28);
+
+  try {
+    const key = await deriveKey(passkey, salt);
+    const plainBuffer = await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, key, data);
+    return decoder.decode(plainBuffer);
+  } catch (e) {
+    throw new Error('Invalid passphrase or corrupted data');
+  }
 }
 
 const { createApp } = Vue;
@@ -58,7 +133,7 @@ createApp({
       this.result = '';
       this.persist();
     },
-    handleAction() {
+    async handleAction() {
       this.stopAnimation();
       if (this.passkey.length === 0) {
         this.setStatus('Passkey is required before processing.', true);
@@ -71,12 +146,12 @@ createApp({
 
       try {
         if (this.mode === 'encode') {
-          const encoded = encodeMessage(this.message, this.passkey);
+          const encoded = await encodeMessage(this.message, this.passkey);
           this.result = encoded;
           this.displayedResult = encoded;
           this.setStatus('Message encoded successfully.');
         } else {
-          const decoded = decodeMessage(this.message, this.passkey);
+          const decoded = await decodeMessage(this.message, this.passkey);
           this.result = decoded;
           if (this.animationEnabled) {
             this.setStatus('Decoding with animated reveal...');
