@@ -38,7 +38,14 @@
 
         <div class="terminal-window">
           <label class="field-label" for="message">Message</label>
-          <textarea id="message" v-model="message" class="terminal-input" placeholder="Type or paste the text you want to {{ mode }}..."></textarea>
+          <textarea
+            id="message"
+            :value="mode === 'encode' ? displayMessage : message"
+            @input="handleMessageInput"
+            @beforeinput="recordSelection"
+            class="terminal-input"
+            placeholder="Type or paste the text you want to {{ mode }}..."
+          ></textarea>
 
           <div class="action-row">
             <button class="primary" @click="handleAction">
