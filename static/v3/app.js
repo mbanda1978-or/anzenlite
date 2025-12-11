@@ -347,7 +347,8 @@ createApp({
     },
     maskLeadingPortion(segment) {
       if (!segment) return '';
-      const keepCharacters = Math.max(6, Math.floor(segment.length * 0.25));
+      // Keep only the last few characters visible (3-8 chars depending on length)
+      const keepCharacters = Math.min(8, Math.max(3, Math.floor(segment.length * 0.1)));
       const maskLength = Math.max(0, segment.length - keepCharacters);
       const masked = segment
         .slice(0, maskLength)
