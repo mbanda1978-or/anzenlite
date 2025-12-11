@@ -335,9 +335,9 @@ createApp({
             return segment.replace(/[^\s]/g, '*');
           }
 
-          // When there are only a few sentences, still mask the leading portion
-          // of the visible text so decoded content is never fully exposed.
-          if (sentences.length <= 3 && index === visibleStart) {
+          // Always mask the leading portion of the first visible sentence so
+          // decoded content is never fully exposed.
+          if (index === visibleStart) {
             return this.maskLeadingPortion(segment);
           }
 
