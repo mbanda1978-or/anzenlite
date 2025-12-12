@@ -106,7 +106,7 @@ createApp({
       displayMessage: '',
       passkey: '',
       mode: 'encode',
-      decodeSpeed: 'fast',
+      decodeSpeed: 'slow',
       status: { message: 'Awaiting input. Choose encode or decode to begin.', isError: false },
       result: '',
       displayedResult: '',
@@ -184,35 +184,53 @@ createApp({
         this.setStatus(err.message || 'An unexpected error occurred.', true);
       }
     },
-    animateDecode(text) {
-      this.isAnimating = true;
-      this.displayedResult = '';
-      let index = 0;
-      const nextDelay = () => (this.decodeSpeed === 'fast' ? 12 + Math.random() * 18 : 40 + Math.random() * 30);
-      const reveal = () => {
-        index += 1;
-        const partial = text.slice(0, index);
-        this.displayedResult = this.computeMaskedDecoded(partial);
+animateDecode(text) {
+  this.isAnimating = true;
+  this.displayedResult = '';
+  
+  // Clear any existing masking timer
+  if (this.maskingTimer) {
+    clearTimeout(this.maskingTimer);
+    this.maskingTimer = null;
+  }
+  
+  let index = 0;
+  const nextDelay = () => (this.decodeSpeed === 'fast' ? 12 + Math.random() * 18 : 40 + Math.random() * 30);
+  const reveal = () => {
+    index += 1;
+    const partial = text.slice(0, index);
+    this.displayedResult = this.computeMaskedDecoded(partial, true);
 
-        if (index < text.length) {
-          this.animationTimer = setTimeout(reveal, nextDelay());
-          return;
-        }
+    if (index < text.length) {
+      this.animationTimer = setTimeout(reveal, nextDelay());
+      return;
+    }
 
-        this.isAnimating = false;
-        this.displayedResult = this.computeMaskedDecoded(text);
-        this.animationTimer = null;
-        this.setStatus('Message decoded successfully.');
-      };
-      reveal();
-    },
-    stopAnimation() {
-      if (this.animationTimer) {
-        clearTimeout(this.animationTimer);
-        this.animationTimer = null;
-      }
-      this.isAnimating = false;
-    },
+    this.isAnimating = false;
+    // Keep showing the sliding window (don't unmask everything)
+    this.displayedResult = this.computeMaskedDecoded(text, true); // Changed to true
+    this.animationTimer = null;
+    this.setStatus('Message decoded successfully.');
+    
+    // Start timer to mask the text after 5 seconds
+    this.maskingTimer = setTimeout(() => {
+      this.displayedResult = this.computeMaskedDecoded(text, false);
+      this.maskingTimer = null;
+    }, 5000);
+  };
+  reveal();
+},
+stopAnimation() {
+  if (this.animationTimer) {
+    clearTimeout(this.animationTimer);
+    this.animationTimer = null;
+  }
+  if (this.maskingTimer) {
+    clearTimeout(this.maskingTimer);
+    this.maskingTimer = null;
+  }
+  this.isAnimating = false;
+},
     clearAll() {
       this.stopAnimation();
       this.clearMaskTimer();
@@ -323,38 +341,57 @@ createApp({
 
       return sentences.filter(Boolean);
     },
-    computeMaskedDecoded(text) {
-      if (!text) return '';
-      const sentences = this.splitIntoSentences(text);
-      if (!sentences.length) return text;
-      const visibleStart = Math.max(0, sentences.length - 3);
-
-      return sentences
-        .map((segment, index) => {
-          if (index < visibleStart) {
-            return segment.replace(/[^\s]/g, '*');
-          }
-
-          // When there are only a few sentences, still mask the leading portion
-          // of the visible text so decoded content is never fully exposed.
-          if (sentences.length <= 3 && index === visibleStart) {
-            return this.maskLeadingPortion(segment);
-          }
-
-          return segment;
-        })
-        .join('');
-    },
-    maskLeadingPortion(segment) {
-      if (!segment) return '';
-      // Keep only the last few characters visible (3-8 chars depending on length)
-      const keepCharacters = Math.min(8, Math.max(3, Math.floor(segment.length * 0.1)));
-      const maskLength = Math.max(0, segment.length - keepCharacters);
-      const masked = segment
-        .slice(0, maskLength)
-        .replace(/[^\s]/g, '*');
-      return `${masked}${segment.slice(maskLength)}`;
-    },
+computeMaskedDecoded(text, duringAnimation = false) {
+  if (!text) return '';
+  
+  if (duringAnimation) {
+    // During animation: show sliding window (last 40-150 chars)
+    const percentage = 0.2;
+    const minVisible = 40;
+    const maxVisible = 150;
+    
+    let visibleChars = Math.floor(text.length * percentage);
+    visibleChars = Math.max(minVisible, visibleChars);
+    visibleChars = Math.min(maxVisible, visibleChars);
+    visibleChars = Math.min(visibleChars, text.length);
+    
+    const maskUntil = text.length - visibleChars;
+    
+    return text.split('').map((char, index) => {
+      if (index < maskUntil) {
+        return /\s/.test(char) ? char : '*';
+      }
+      return char;
+    }).join('');
+  } else {
+    // After animation: fully mask everything
+    return text.replace(/[^\s]/g, '*');
+  }
+},
+maskLeadingPortion(segment) {
+  if (!segment) return '';
+  
+  // For incomplete sentences (no ending punctuation), be MORE aggressive
+  const isComplete = /[.!?]\s*$/.test(segment);
+  
+  if (!isComplete) {
+    // For incomplete text during animation, only show last 3-5 characters
+    const keepCharacters = Math.min(5, Math.max(3, Math.floor(segment.length * 0.05)));
+    const maskLength = Math.max(0, segment.length - keepCharacters);
+    const masked = segment
+      .slice(0, maskLength)
+      .replace(/[^\s]/g, '*');
+    return `${masked}${segment.slice(maskLength)}`;
+  }
+  
+  // For complete sentences, be slightly less aggressive
+  const keepCharacters = Math.min(8, Math.max(3, Math.floor(segment.length * 0.1)));
+  const maskLength = Math.max(0, segment.length - keepCharacters);
+  const masked = segment
+    .slice(0, maskLength)
+    .replace(/[^\s]/g, '*');
+  return `${masked}${segment.slice(maskLength)}`;
+},
     resetMaskTimer() {
       this.clearMaskTimer();
       if (!this.realMessage) return;
